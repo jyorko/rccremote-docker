@@ -1,0 +1,16 @@
+name: rccremote-cabundle
+description: Robotmk RCC profile with cabundle
+
+settings: 
+  certificates:
+    verify-ssl: true
+    ssl-no-revoke: false
+
+  meta:
+    name: rccremote-cabundle
+    description: Robotmk RCC profile with cabundle
+    source: manual
+    version: 2024.10
+
+ca-bundle: |
+${ROOT_CA_CONTENT}

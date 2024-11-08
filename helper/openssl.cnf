@@ -9,11 +9,11 @@ stateOrProvinceName        = BY
 localityName               = ACME
 organizationName           = ACME Inc.
 organizationalUnitName     = Dev
-commonName         = rccremote
+commonName         = rccremote.local
 
 [ v3_req ]
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = rccremote
+DNS.1 = rccremote.local
 

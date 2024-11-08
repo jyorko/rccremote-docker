@@ -1,24 +1,29 @@
 services:
-  rccremote:
+  rccremote: &rcc
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-rcc
     container_name: rccremote
+    command: rccremote
     volumes:
-      - ./data:/data
+      - ./entrypoint-rcc.sh:/entrypoint.sh
+      - ./robots:/robots
       - ./certs:/etc/certs:ro
     networks:
       - app-network
-  # rcc:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: rcc
-  #   volumes:
-  #     - ./data:/data
-  #     - ./certs:/etc/certs:ro
-  #   networks:
-  #     - app-network
+
+  # only uncomment for testing
+  rcc:
+    <<: *rcc
+    container_name: rcc
+    command: rcc
+    volumes:
+      - ./entrypoint-rcc.sh:/entrypoint.sh
+      - ./robots:/robots
+      - ./certs:/etc/certs:ro
+      - ./config/rcc-profile-cabundle.yaml.template:/rcc-profile-cabundle.yaml.template
+    environment:
+      - RCC_REMOTE_ORIGIN=https://rccremote.local:${NGINX_PORT:-443}
 
   nginx:
     image: nginx:latest
@@ -26,12 +31,14 @@ services:
     depends_on:
       - rccremote
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs:/etc/nginx/certs:ro
     ports:
       - "443:443"
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - rccremote.local
 
 networks:
   app-network:
