@@ -6,9 +6,10 @@ services:
     container_name: rccremote
     command: rccremote
     volumes:
-      - ./entrypoint-rcc.sh:/entrypoint.sh
+      - ./scripts:/scripts
       - ./robots:/robots
       - ./certs:/etc/certs:ro
+      - robocorp_data:/opt/robocorp
     networks:
       - app-network
 
@@ -18,12 +19,12 @@ services:
     container_name: rcc
     command: rcc
     volumes:
-      - ./entrypoint-rcc.sh:/entrypoint.sh
+      - ./scripts:/scripts
       - ./robots:/robots
       - ./certs:/etc/certs:ro
-      - ./config/rcc-profile-cabundle.yaml.template:/rcc-profile-cabundle.yaml.template
+      - ./config/rcc-profiles.d:/etc/rcc-profiles.d:ro
     environment:
-      - RCC_REMOTE_ORIGIN=https://rccremote.local:${NGINX_PORT:-443}
+      - RCC_REMOTE_ORIGIN=https://${SERVER_NAME}:${NGINX_PORT:-443}
 
   nginx:
     image: nginx:latest
@@ -31,14 +32,18 @@ services:
     depends_on:
       - rccremote
     volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
+      - ./config/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
+      - ./certs:/etc/nginx/certs
+      - ./scripts/entrypoint-nginx.sh:/docker-entrypoint.d/entrypoint-nginx.sh
+      - ./scripts/openssl.cnf.template:/openssl.cnf.template
     ports:
       - "443:443"
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
     networks:
       app-network:
         aliases:
-          - rccremote.local
+          - ${SERVER_NAME}
 
 networks:
   app-network:
@@ -47,3 +52,4 @@ networks:
 volumes:
   data-volume:
     driver: local
+  robocorp_data:

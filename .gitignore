@@ -2,4 +2,9 @@ certs/*.crt
 certs/*.key
 certs/*.pem
 certs/*.csr
-robots/rf7
+log.html
+report.html
+output.xml
+stdout.log
+stderr.log
+*freeze.yaml

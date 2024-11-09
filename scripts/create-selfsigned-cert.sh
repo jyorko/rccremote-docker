@@ -2,17 +2,35 @@
 
 # This script is only for demonstration purposes of how to create the server certificate.
 
-# veirfy that parent folder is helper
-if [ ! -d "../helper" ]; then
-    echo "Please run this script from the helper folder."
+# veirfy that parent folder is scripts
+if [ ! -d "../scripts" ]; then
+    echo "Please run this script from the scripts folder."
     exit 1
 fi
 
 CERT_DIR=../certs
-OPENSSL_CONF=./openssl.cnf
-SERVER_NAME=rccremote.local
+OPENSSL_TPL=./openssl.cnf.template
+
+# if SERVER_NAME is not set in environment, read from .env
+if [ -z "$SERVER_NAME" ]; then
+    if [ -f ../.env ]; then
+        source ../.env
+        export $SERVER_NAME
+        echo "SERVER_NAME is set to $SERVER_NAME in .env file."
+    else
+        echo "SERVER_NAME is not set in environment or .env file."
+        exit 1
+    fi
+else
+    echo "SERVER_NAME is set to $SERVER_NAME in environment variable."
+fi
 
 mkdir -p $CERT_DIR
+
+# create temporary openssl config file and use envsubst to replace the SERVER_NAME
+OPENSSL_CONF=$(mktemp)
+envsubst '$SERVER_NAME' <${OPENSSL_TPL} >${OPENSSL_CONF}
+echo "Generated openssl config file $OPENSSL_CONF with server name $SERVER_NAME"
 
 # remove all crt/key/pem/csr files in the CERT_DIR after prompting the user
 read -p "This will empty the cert dir $CERT_DIR. Are you sure? (y/n) " -n 1 -r
@@ -46,3 +64,11 @@ echo "4. Signing the Server Certificate with the Root Certificate..."
 openssl x509 -req -days 3650 -in $CERT_DIR/server.csr \
     -CA $CERT_DIR/rootCA.crt -CAkey $CERT_DIR/rootCA.key -CAcreateserial \
     -out $CERT_DIR/server.crt -extensions v3_req -extfile $OPENSSL_CONF
+
+echo "==== Server certificate created successfully ===="
+echo "Root CA certificate: $CERT_DIR/rootCA.crt"
+echo "Root CA certificate bundle: $CERT_DIR/rootCA.pem"
+echo "Server certificate: $CERT_DIR/server.crt"
+echo "Server private key: $CERT_DIR/server.key"
+echo "Server certificate details:"
+openssl x509 -in $CERT_DIR/server.crt -text -noout
