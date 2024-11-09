@@ -2,6 +2,12 @@
 
 Docker-compose setup with SSL for [rccremote](https://sema4.ai/docs/automation/rcc/overview).
 
+```mermaid
+graph LR
+    rcc -->|TLS| nginx
+    nginx --> rccremote
+```
+
 ## Background
 
 In order to built RCC environments with **rcc**, the host must be connected to the Internet in order to download the installation sources for Python/Node.js/etc.  
