@@ -14,17 +14,17 @@ services:
       - app-network
 
   # only uncomment for testing
-  rcc:
-    <<: *rcc
-    container_name: rcc
-    command: rcc
-    volumes:
-      - ./scripts:/scripts
-      - ./robots:/robots
-      - ./certs:/etc/certs:ro
-      - ./config/rcc-profiles.d:/etc/rcc-profiles.d:ro
-    environment:
-      - RCC_REMOTE_ORIGIN=https://${SERVER_NAME}:${NGINX_PORT:-443}
+  # rcc:
+  #   <<: *rcc
+  #   container_name: rcc
+  #   command: rcc
+  #   volumes:
+  #     - ./scripts:/scripts
+  #     - ./robots:/robots
+  #     - ./certs:/etc/certs:ro
+  #     - ./config/rcc-profiles.d:/etc/rcc-profiles.d:ro
+  #   environment:
+  #     - RCC_REMOTE_ORIGIN=https://${SERVER_NAME}:${NGINX_PORT:-443}
 
   nginx:
     image: nginx:latest
