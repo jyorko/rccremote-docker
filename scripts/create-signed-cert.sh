@@ -15,7 +15,7 @@ OPENSSL_TPL=./openssl.cnf.template
 if [ -z "$SERVER_NAME" ]; then
     if [ -f ../.env ]; then
         source ../.env
-        export $SERVER_NAME
+        export SERVER_NAME
         echo "SERVER_NAME is set to $SERVER_NAME in .env file."
     else
         echo "SERVER_NAME is not set in environment or .env file."
