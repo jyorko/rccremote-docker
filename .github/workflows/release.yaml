@@ -44,3 +44,4 @@ jobs:
           body: ${{ env.CHANGELOG_CONTENT }}
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
