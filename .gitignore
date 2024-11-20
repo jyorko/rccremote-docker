@@ -8,3 +8,5 @@ output.xml
 stdout.log
 stderr.log
 *freeze.yaml
+data/hololib_zip
+data/robots
