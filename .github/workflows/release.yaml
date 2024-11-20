@@ -1,0 +1,43 @@
+name: Create Release with Changelog
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Extract changelog for the tag
+        id: changelog
+        run: |
+          # Get the current tag
+          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+
+          # Extract changelog for the current tag using awk
+          CHANGELOG=$(awk "/## \\[${CURRENT_TAG}\\]/,/^## \\[/" CHANGELOG.md | sed '$d')
+          
+          # Handle no match (e.g., if the tag isn't in the changelog)
+          if [[ -z "$CHANGELOG" ]]; then
+            echo "Changelog for ${CURRENT_TAG} not found. Please ensure CHANGELOG.md is updated."
+            exit 1
+          fi
+
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Step 3: Create a GitHub Release
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: ${{ env.CHANGELOG_CONTENT }}
+          draft: false
+          prerelease: false
