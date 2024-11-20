@@ -13,8 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Extract changelog for the tag
         id: changelog
@@ -23,7 +23,7 @@ jobs:
           CURRENT_TAG=${GITHUB_REF#refs/tags/}
 
           # Extract changelog for the current tag using awk
-          CHANGELOG=awk '/^## \[v0.2.0\]/,/^<a name=/{if (NR!=1) print}' CHANGELOG.md | sed '$d'
+          CHANGELOG=$(grep -A 1000 "^## \[$CURRENT_TAG\]" CHANGELOG.md | sed -n '/^## \[v0.2.0\]/,/^<a name/{p}' | sed '$d')
           
           # Handle no match (e.g., if the tag isn't in the changelog)
           if [[ -z "$CHANGELOG" ]]; then
