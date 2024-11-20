@@ -30,10 +30,17 @@ mkdir -p $CERT_DIR
 # create temporary openssl config file and use envsubst to replace the SERVER_NAME
 OPENSSL_CONF=$(mktemp)
 envsubst '$SERVER_NAME' <${OPENSSL_TPL} >${OPENSSL_CONF}
-echo "Generated openssl config file $OPENSSL_CONF with server name $SERVER_NAME"
+
+if grep -q $SERVER_NAME $OPENSSL_CONF; then
+    echo "Openssl configuration created successfully with server name $SERVER_NAME ($OPENSSL_CONF)."
+else
+    echo "Server name $SERVER_NAME not found in the openssl config file ($OPENSSL_CONF). Exiting..."
+    exit 1
+fi
 
 # remove all crt/key/pem/csr files in the CERT_DIR after prompting the user
-read -p "This will empty the cert dir $CERT_DIR. Are you sure? (y/n) " -n 1 -r
+echo "Ready to generate the certificates now. This will empty the cert dir $CERT_DIR."
+read -p "=> Are you sure? (y/n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     rm -f $CERT_DIR/*.{crt,key,pem,csr}
 fi
