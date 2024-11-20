@@ -53,7 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
+          echo ${{ env.CHANGELOG_CONTENT }} > temp_changelog.md
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag#v}" \
-              --notes=${{ env.CHANGELOG_CONTENT }}
+              --notes-file=temp_changelog.md
