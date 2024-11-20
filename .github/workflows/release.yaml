@@ -56,4 +56,4 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag#v}" \
-              --generate-notes
+              --notes=${{ env.CHANGELOG_CONTENT }}
