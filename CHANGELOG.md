@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="v0.2.1"></a>
+## [v0.2.1] - 2024-11-21
+### Docs
+- Updated README with custom ROBOCORP_HOME + mermaid graph
+
+
 <a name="v0.2.0"></a>
 ## [v0.2.0] - 2024-11-20
 ### Fix
@@ -22,5 +28,6 @@
 - self-signed and signed certificates work
 
 
-[Unreleased]: https://github.com/elabit/rccremote-docker/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/elabit/rccremote-docker/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/elabit/rccremote-docker/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/elabit/rccremote-docker/compare/v0.1.0...v0.2.0
