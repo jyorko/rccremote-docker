@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile-rcc
     container_name: rccremote
     command: rccremote
+    environment:
+    - ROBOCORP_HOME=/opt/robotmk/rcc_home/kdlocpanda
     volumes:
       # !!! place your robot code in here
       - ./data/robots:/robots
