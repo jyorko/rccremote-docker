@@ -5,8 +5,6 @@ services:
       dockerfile: Dockerfile-rcc
     container_name: rccremote
     command: rccremote
-    environment:
-    - ROBOCORP_HOME=/opt/robotmk/rcc_home/kdlocpanda
     volumes:
       # !!! place your robot code in here
       - ./data/robots:/robots
@@ -23,19 +21,19 @@ services:
       - app-network
 
   # only uncomment for testing
-  rcc:
-    <<: *rcc
-    container_name: rcc
-    command: rcc
-    volumes:
-      - ./scripts:/scripts
-      - ./data/robots:/robots
-      - ./data/robots-samples:/robots-samples
-      - ./certs:/etc/certs:ro
-      - ./config/rcc-profiles.d:/etc/rcc-profiles.d:ro
-    environment:
-      - RCC_REMOTE_ORIGIN=https://${SERVER_NAME}:${NGINX_PORT:-443}
-
+  #rcc:
+  #  <<: *rcc
+  #  container_name: rcc
+  #  command: rcc
+  #  volumes:
+  #    - ./scripts:/scripts
+  #    - ./data/robots:/robots
+  #    - ./data/robots-samples:/robots-samples
+  #    - ./certs:/etc/certs:ro
+  #    - ./config/rcc-profiles.d:/etc/rcc-profiles.d:ro
+  #  environment:
+  #    - RCC_REMOTE_ORIGIN=https://${SERVER_NAME}:${NGINX_PORT:-443}
+#
   nginx:
     image: nginx:latest
     container_name: nginx
