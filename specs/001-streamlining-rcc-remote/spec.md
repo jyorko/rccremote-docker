@@ -32,6 +32,8 @@ As a DevOps engineer or automation developer, I want to deploy RCC Remote in a c
 - What happens when certificate generation fails or certificates expire?
   - Certificate generation failure: System MUST fail deployment with detailed error message and remediation steps
 - How does the system handle missing or corrupted environment catalogs?
+  - Missing catalogs: System MUST log warning and continue serving available catalogs
+  - Corrupted catalogs: System MUST quarantine corrupted files, log error with catalog name and checksum mismatch, and fallback to last known good version if available
 - What occurs when ARC runners lose connectivity to RCC Remote?
   - ARC connectivity loss: System MUST fall back to cached catalogs if available, otherwise fail with clear connectivity error
 - How does the system behave when storage volumes are full or unavailable?
@@ -42,7 +44,7 @@ As a DevOps engineer or automation developer, I want to deploy RCC Remote in a c
 - **FR-001**: System MUST provide automated SSL certificate generation when custom certificates are not provided
 - **FR-002**: System MUST enforce SSL/TLS for all client connections with certificate validation
 - **FR-003**: System MUST include comprehensive health check endpoints for container orchestration
-- **FR-003a**: System MUST support minimum 100 concurrent RCC client connections with horizontal scaling capabilities
+- **FR-003a**: System MUST support 100-500 concurrent RCC client connections with horizontal scaling capabilities and automatic load balancing
 - **FR-004**: System MUST support both Docker Compose and Kubernetes deployment methods with clear documentation
 - **FR-005**: System MUST provide stable service discovery mechanisms for ARC runner integration with catalog caching for connectivity resilience
 - **FR-006**: System MUST run all containers with non-root users and minimal required privileges
@@ -55,7 +57,7 @@ As a DevOps engineer or automation developer, I want to deploy RCC Remote in a c
 - **FR-013**: System MUST automatically configure SSL trust profiles based on available certificates
 - **FR-014**: System MUST provide comprehensive documentation for environment variable usage and security considerations
 - **FR-015**: System MUST include readiness and liveness probes for robust orchestration
-- **FR-016**: System MUST achieve 99.9% uptime availability target with automated recovery mechanisms
+- **FR-016**: System MUST achieve 99.9% monthly uptime availability target with automated recovery mechanisms and <5 minute MTTR
 
 ### Key Entities *(include if feature involves data)*
 - **Deployment Manifest**: Configuration templates for Docker Compose and Kubernetes with parameterized values
